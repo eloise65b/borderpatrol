@@ -2,8 +2,12 @@ import pygame
 import random
 import time 
 import sqlite3
+import sys
 
+pygame.init()
 conn = sqlite3.connect('data.db') #note to self: this is NEEDED don't touch it, you'll break everything
+clock = pygame.time.Clock()
+
 
 def importperson():
     cursor = conn.cursor()
@@ -58,26 +62,69 @@ def roundrobin(sleeptime):
         #what the hell is this though
 
 
-bg = (255,255,255)
-width = 500
-height = 500
+#bg = (255,255,255)
+#width = 500
+#height = 500
 #initialise window
-win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Paperwork")
-win.fill(bg)
-font = pygame.font.SysFont(None, 24)
-img = font.render('Welcome to Paperwork', True, BLUE)
+#win = pygame.display.set_mode((width, height))
+#pygame.display.set_caption("Paperwork")
+#win.fill(bg)
+#font = pygame.font.SysFont(None, 24)
+#img = font.render('Welcome to Paperwork', True, BLUE)
 #you have to blit not print. format is [name of window thing].blit(text, (coords))
-win.blit(img, (20, 20))
+#win.blit(img, (20, 20))
 
-pygame.display.flip()
-running = True
-while running:
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
+screen = pygame.display.set_mode([600, 500])
+  
+# set font
+base_font = pygame.font.Font(None, 32)
+user_text = ''
+  
+# create rect for input
+input_rect = pygame.Rect(200, 200, 140, 32)
+color_active = pygame.Color('lightskyblue3')
+color_passive = pygame.Color('chartreuse4')
+color = color_passive
+active = False
+
+while True:
+    screen.fill((255, 255, 255))
+         
+    pygame.draw.rect(screen, color, input_rect)
+    text_surface = base_font.render(user_text, True, (255, 255, 255))
+    screen.blit(text_surface, (input_rect.x+5, input_rect.y+5))
+    input_rect.w = max(100, text_surface.get_width()+10)
+    pygame.display.flip()
+    clock.tick(60)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if input_rect.collidepoint(event.pos):
+                active = True
+                color = color_active
+                inputparser()
+             else:
+                active = False
+                color = color_passive
+    
+                
+def inputparser():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                user_text = user_text[:-1]
+            else:
+                user_text += event.unicode
+
+
+
+
 
 importperson()
+
+
 
 def startmenu(clientNumber):
     win.blit("Client Number",clientNumber)
