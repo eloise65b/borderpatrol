@@ -18,7 +18,7 @@ for i in range (0,5):
   task = split(task)
   taskdig1 = task[3]
   taskdig2 = task[4]
-  taskname = ["select TaskName from Task where TaskID like", TaskID]
-  taskduration = ["select TaskDuration from Task where TaskID like", TaskID]
-  taskscore = ["select TaskScore from Task where TaskID like", TaskID]
+  taskname = str(["select TaskName from Task where TaskID like", TaskID])
+  taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
+  taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
   
