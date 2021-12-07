@@ -16,7 +16,9 @@ for i in range (0,5):
   task = waitingroom[i]
   task = str(task)
   task = split(task)
-  taskdurdig1 = task[3]
-  taskdurdig2 = task[4]
-  taskarray = ["select TaskDuration from Task where TaskID like", TaskID]
- 
+  taskdig1 = task[3]
+  taskdig2 = task[4]
+  taskname = ["select TaskName from Task where TaskID like", TaskID]
+  taskduration = ["select TaskDuration from Task where TaskID like", TaskID]
+  taskscore = ["select TaskScore from Task where TaskID like", TaskID]
+  
