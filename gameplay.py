@@ -19,5 +19,4 @@ for i in range (0,5):
   taskdurdig1 = task[3]
   taskdurdig2 = task[4]
   taskarray = ["select TaskDuration from Task where TaskID like", TaskID]
-  
-  
+ 
