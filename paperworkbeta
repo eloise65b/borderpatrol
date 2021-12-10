@@ -4,10 +4,15 @@ def split(word):
 #get reference number
 waitingroom = []
 currenttasks = []
+setupdone = 0
+
 importperson()
-for i in range (0,5):
-  person = importperson()
-  waitingroom.append(person)
+
+
+def populatewaitingroom():
+    for i in range (0,5):
+      person = importperson()
+     waitingroom.append(person)
   
 #moved scheduling algorithms
 def longestfirst():
@@ -51,7 +56,7 @@ for i in range (0,5):
   nameID = str(namedig1 + namedig2)
 
 
-#get duration
+def getalltasks():
 for i in range (0,5):
   task = waitingroom[i]
   task = str(task)
@@ -62,5 +67,32 @@ for i in range (0,5):
   taskname = str(["select TaskName from Task where TaskID like", TaskID])
   taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
   taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
-  
 
+def instructions():
+    #prints instructions to screen
+    pass
+
+def waitingroomdump():
+    for i in range (0,5):
+        refnum = waitingroom[i]
+        refnum = split(refnum)
+        taskdig1 = refnum[2]
+        taskdig2 = refnum[3]
+        
+        taskID = str(taskdig1 + taskdig2)
+        taskname = str(["select TaskName from Task where TaskID like", TaskID])
+        taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
+        taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
+        
+
+def setup():
+    populatewaitingroom()
+    setupdone = 1
+  
+def main():
+    if setupdone = 0:
+        setup()
+    print("Game begin.")
+    
+
+        
