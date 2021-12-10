@@ -1,3 +1,15 @@
+import logging
+import threading
+import time
+import pygame
+import random 
+import sqlite3
+import sys
+
+pygame.init()
+conn = sqlite3.connect('data.db') #note to self: this is NEEDED don't touch it, you'll break everything
+clock = pygame.time.Clock()
+
 def split(word):
     return [char for char in word]
 
@@ -76,13 +88,34 @@ def waitingroomdump():
     for i in range (0,5):
         refnum = waitingroom[i]
         refnum = split(refnum)
+        namedig1 = refnum[0]
+        namedig2 = refnum[1]
         taskdig1 = refnum[2]
         taskdig2 = refnum[3]
+        typedig1 = refnum[4]
+        typedig2 = refnum[5]
+        nameID = str(namedig1 + namedig2)
+        
+        firstnamei = str("select firstname from names where nameID like", NameID)
+        firstname = cursor.execute(firstnamei)
+        
+        lastnamei = str("select lastname from names where nameID like", NameID)
+        lastname = cursor.execute(lastinamei)
         
         taskID = str(taskdig1 + taskdig2)
-        taskname = str(["select TaskName from Task where TaskID like", TaskID])
-        taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
-        taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
+        
+        tasknamei = str("select TaskName from Task where TaskID like", TaskID)
+        taskname = cursor.execute(tasknamei)
+        
+        taskdurationi = str("select TaskDuration from Task where TaskID like", TaskID)
+        taskduration = cursor.execute(taskdurationi)
+        
+        taskscorei = str("select TaskScore from Task where TaskID like", TaskID)
+        taskscore = cursor.execute(taskscorei)
+        
+        typeID = str(typedig1 + typedig2)
+        typenamei = ("select TypeName from Type where TypeID like", TypeID)
+        typename = cursor.execute(typenamei)
         
 
 def setup():
