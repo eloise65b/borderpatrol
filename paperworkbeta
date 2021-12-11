@@ -1,5 +1,4 @@
 import logging
-import thread
 import threading
 import time
 import pygame
@@ -8,34 +7,62 @@ import sqlite3
 import sys
 
 pygame.init()
-conn = sqlite3.connect('data.db') #note to self: this is NEEDED don't touch it, you'll break everything
+conn = sqlite3.connect('data.db')
+cursor = conn.cursor()
+#note to self: this is NEEDED don't touch it, you'll break everything
 clock = pygame.time.Clock()
 
-def timerinit():
+def timerinit(refnum):
         taskdig1 = refnum[2]
         taskdig2 = refnum[3]
         taskdurationi = str("select TaskDuration from Task where TaskID like", TaskID)
         taskduration = cursor.execute(taskdurationi)
     
 
-
+def importperson(refnum):
+        refnum = split(refnum)
+        namedig1 = refnum[0]
+        namedig2 = refnum[1]
+        taskdig1 = refnum[2]
+        taskdig2 = refnum[3]
+        typedig1 = refnum[4]
+        typedig2 = refnum[5]
+        nameID = str(namedig1 + namedig2)
+        
+        firstnamei = str("select firstname from names where nameID like", nameID)
+        firstname = cursor.execute(firstnamei)
+        
+        lastnamei = str("select lastname from names where nameID like", nameID)
+        lastname = cursor.execute(lastnamei)
+        
+        taskID = str(taskdig1 + taskdig2)
+        
+        tasknamei = str("select TaskName from Task where TaskID like", taskID)
+        taskname = cursor.execute(tasknamei)
+        
+        taskdurationi = str("select TaskDuration from Task where TaskID like", taskID)
+        taskduration = cursor.execute(taskdurationi)
+        
+        taskscorei = str("select TaskScore from Task where TaskID like", taskID)
+        taskscore = cursor.execute(taskscorei)
+        
+        typeID = str(typedig1 + typedig2)
+        typenamei = ("select TypeName from Type where TypeID like", typeID)
+        typename = cursor.execute(typenamei)
 
 def split(word):
     return [char for char in word]
 
-#get reference number
-waitingroom = []
-currenttasks = []
-setupdone = 0
-
-importperson()
-
-
 def populatewaitingroom():
     for i in range (0,5):
-      person = importperson()
-     waitingroom.append(person)
-  
+      refnum = generaterefnum()
+      person = importperson(refnum)
+      waitingroom.append(person)
+
+def generaterefnum():
+    #TODO: this
+
+
 #moved scheduling algorithms
 def longestfirst():
     #x = number of tasks waiting
@@ -69,26 +96,27 @@ def roundrobin(sleeptime):
 
         #TODO: please for the love of god redo these
 
-for i in range (0,5):
-  name = waitingroom[i]
-  name = str(name)
-  name = split(task)
-  namedig1 = name[0]
-  namedig2 = name[1]
-  nameID = str(namedig1 + namedig2)
+def getname():
+    for i in range (0,5):
+     name = waitingroom[i]
+     name = str(name)
+    name = split(name)
+    namedig1 = name[0]
+    namedig2 = name[1]
+    nameID = str(namedig1 + namedig2)
 
 
 def getalltasks():
-for i in range (0,5):
-  task = waitingroom[i]
-  task = str(task)
-  task = split(task)
-  taskdig1 = task[2]
-  taskdig2 = task[3]
-  taskID = str(taskdig1 + taskdig2)
-  taskname = str(["select TaskName from Task where TaskID like", TaskID])
-  taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
-  taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
+    for i in range (0,5):
+     task = waitingroom[i]
+     task = str(task)
+     task = split(task)
+     taskdig1 = task[2]
+     taskdig2 = task[3]
+     taskID = str(taskdig1 + taskdig2)
+     taskname = str(["select TaskName from Task where TaskID like", TaskID])
+     taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
+    taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
 
 def instructions():
     #prints instructions to screen
@@ -110,7 +138,7 @@ def waitingroomdump():
         firstname = cursor.execute(firstnamei)
         
         lastnamei = str("select lastname from names where nameID like", NameID)
-        lastname = cursor.execute(lastinamei)
+        lastname = cursor.execute(lastnamei)
         
         taskID = str(taskdig1 + taskdig2)
         
@@ -126,6 +154,8 @@ def waitingroomdump():
         typeID = str(typedig1 + typedig2)
         typenamei = ("select TypeName from Type where TypeID like", TypeID)
         typename = cursor.execute(typenamei)
+
+        print(firstname, lastname, "is a", typename, "waiting for", taskname)
         
 
 def setup():
@@ -133,12 +163,21 @@ def setup():
     setupdone = 1
 
 def main():
-    if setupdone = 0:
+    if setupdone == 0:
         setup()
     print("Game begin.")
-    
+    waitingroomdump()
 
- #TODO: allow for moving out of the waiting room and into the "doing presently" bit, just use append and pop and a temp variable
+#get reference number
+waitingroom = []
+currenttasks = []
+setupdone = 0
+main()
+
+
+ #TODO: 
+ #generate refnum funtion - top priority 
+ # allow for moving out of the waiting room and into the "doing presently" bit, just use append and pop and a temp variable
  #use said lists to generate a second list of start times
  #time spent processing exceeds time needed, pass
  #time spent waiting exceeds wait time for person, fail task related to that person [use the reference numbers!!]
