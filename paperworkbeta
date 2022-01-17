@@ -5,6 +5,24 @@ import pygame
 import random 
 import sqlite3
 import sys
+import pickle
+import socket
+import socketserver
+host = "unset"
+port = "unset"
+
+def setup():
+    host = input("enter host: ")
+    port = input("enter port: ")
+
+def send(data):
+    mySocket = socket( AF_INET, SOCK_DGRAM )
+    mySocket.connect((SERVER_IP,PORT_NUMBER))
+    mySocket.send(data)
+
+def recieve():
+    refnum=pickle.loads(bufferreceived)
+    return(refnum)
 
 pygame.init()
 conn = sqlite3.connect('data.db')
@@ -15,7 +33,7 @@ clock = pygame.time.Clock()
 def timerinit(refnum):
         taskdig1 = refnum[2]
         taskdig2 = refnum[3]
-        taskdurationi = str("select TaskDuration from Task where TaskID like", TaskID)
+        taskdurationi = str("select TaskDuration from Task where TaskID like", taskID)
         taskduration = cursor.execute(taskdurationi)
     
 
@@ -61,6 +79,11 @@ def populatewaitingroom():
 
 def generaterefnum():
     #TODO: this
+    name = choices()
+    task = choices()
+    type = choices() 
+    
+    pass
 
 
 #moved scheduling algorithms
@@ -134,25 +157,25 @@ def waitingroomdump():
         typedig2 = refnum[5]
         nameID = str(namedig1 + namedig2)
         
-        firstnamei = str("select firstname from names where nameID like", NameID)
+        firstnamei = str("select firstname from names where nameID like", nameID)
         firstname = cursor.execute(firstnamei)
         
-        lastnamei = str("select lastname from names where nameID like", NameID)
+        lastnamei = str("select lastname from names where nameID like", nameID)
         lastname = cursor.execute(lastnamei)
         
         taskID = str(taskdig1 + taskdig2)
         
-        tasknamei = str("select TaskName from Task where TaskID like", TaskID)
+        tasknamei = str("select TaskName from Task where TaskID like", taskID)
         taskname = cursor.execute(tasknamei)
         
-        taskdurationi = str("select TaskDuration from Task where TaskID like", TaskID)
+        taskdurationi = str("select TaskDuration from Task where TaskID like", taskID)
         taskduration = cursor.execute(taskdurationi)
         
-        taskscorei = str("select TaskScore from Task where TaskID like", TaskID)
+        taskscorei = str("select TaskScore from Task where TaskID like", taskID)
         taskscore = cursor.execute(taskscorei)
         
         typeID = str(typedig1 + typedig2)
-        typenamei = ("select TypeName from Type where TypeID like", TypeID)
+        typenamei = ("select TypeName from Type where TypeID like", typeID)
         typename = cursor.execute(typenamei)
 
         print(firstname, lastname, "is a", typename, "waiting for", taskname)
