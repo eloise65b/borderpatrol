@@ -79,6 +79,16 @@ def populatewaitingroom():
       waitingroom.append(person)
 
 def generaterefnum():
+    #TODO: this
+    name = choices(0,1,2,3,4,5,7,8,9,10,11,12,13,14,15)
+    lenchoice = len(name)
+    if lenchoice != 2:
+        name = name + '0'
+
+    task = choices(0,1,2,3,4,5)
+    task = task + '0'
+    type = choices(0,1,2,3,4,5) 
+    type = type + '0'
     #TODO: this - make sure they are in range
     name = choices()
     task = choices()
