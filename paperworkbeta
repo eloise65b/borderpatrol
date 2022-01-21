@@ -8,8 +8,7 @@ import sys
 import pickle
 import socket
 import socketserver
-host = "unset"
-port = "unset"
+import server
 
 HOST = '127.0.0.1'  
 PORT = 65432       
@@ -80,7 +79,7 @@ def populatewaitingroom():
       waitingroom.append(person)
 
 def generaterefnum():
-    #TODO: this
+    #TODO: this - make sure they are in range
     name = choices()
     task = choices()
     type = choices() 
