@@ -11,18 +11,20 @@ import socketserver
 host = "unset"
 port = "unset"
 
-def setup():
-    host = input("enter host: ")
-    port = input("enter port: ")
+HOST = '127.0.0.1'  
+PORT = 65432       
+
 
 def send(data):
-    mySocket = socket( AF_INET, SOCK_DGRAM )
-    mySocket.connect((SERVER_IP,PORT_NUMBER))
-    mySocket.send(data)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        s.sendall(b'data')
+        
 
 def recieve():
-    refnum=pickle.loads(bufferreceived)
-    return(refnum)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        data = s.recv(1024)
+        return(data)
 
 pygame.init()
 conn = sqlite3.connect('data.db')
