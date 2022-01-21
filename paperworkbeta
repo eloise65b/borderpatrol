@@ -198,10 +198,19 @@ currenttasks = []
 setupdone = 0
 main()
 
-
+def movein(i):
+    a = i-1
+    movein = waitingroom.pop(a)
+    currentasks.append(movein)
+    
+def moveout(i):
+    a = i-1
+    moveout = currentasks.pop(a)
+    waitingroom.append(moveout)
+    
+ 
  #TODO: 
  #generate refnum funtion - top priority 
- # allow for moving out of the waiting room and into the "doing presently" bit, just use append and pop and a temp variable
  #use said lists to generate a second list of start times
  #time spent processing exceeds time needed, pass
  #time spent waiting exceeds wait time for person, fail task related to that person [use the reference numbers!!]
