@@ -1,15 +1,16 @@
 import logging
-import threading
-import time
-import pygame
-import random 
-import sqlite3
-import sys
 import pickle
+import random
 import socket
 import socketserver
-import server
+import sqlite3
+import sys
+import threading
+import time
 
+import pygame
+
+import server
 HOST = '127.0.0.1'  
 PORT = 65432       
 
@@ -31,12 +32,48 @@ cursor = conn.cursor()
 #note to self: this is NEEDED don't touch it, you'll break everything
 clock = pygame.time.Clock()
 
+def timeelapsed():
+    pass
+
 def timerinit(refnum):
         taskdig1 = refnum[2]
         taskdig2 = refnum[3]
+        taskID = taskdig1 + taskdig2
         taskdurationi = str("select TaskDuration from Task where TaskID like", taskID)
         taskduration = cursor.execute(taskdurationi)
-    
+        return(taskduration)
+
+def persontimerinit(refnum):
+        typedig1 = refnum[4]
+        typedig2 = refnum[5]
+        TypeID = typedig1 + typedig2
+        waittime = str("select WaitTime from Type where TypeID like", TypeID)
+        timewillwait = cursor.execute(waittime)
+        timeelapsed = timeelapsed()
+
+       
+        
+        
+        
+
+def dotask(refnum):
+    timer = timerinit(refnum)
+    taskdoing = True
+    while taskdoing == True:
+        timer = timer - 1
+        exit = input()
+        time.sleep(1)
+        exit = input()
+        if timer == 0:
+            print("task complete")
+            taskdoing == False
+            return(timeleft)
+        if exit == "x":
+            timeleft = timer
+            taskdoing == False
+            return(timeleft)
+
+
 
 def importperson(refnum):
         refnum = split(refnum)
@@ -50,7 +87,6 @@ def importperson(refnum):
         
         firstnamei = str("select firstname from names where nameID like", nameID)
         firstname = cursor.execute(firstnamei)
-        
         lastnamei = str("select lastname from names where nameID like", nameID)
         lastname = cursor.execute(lastnamei)
         
@@ -58,10 +94,8 @@ def importperson(refnum):
         
         tasknamei = str("select TaskName from Task where TaskID like", taskID)
         taskname = cursor.execute(tasknamei)
-        
         taskdurationi = str("select TaskDuration from Task where TaskID like", taskID)
         taskduration = cursor.execute(taskdurationi)
-        
         taskscorei = str("select TaskScore from Task where TaskID like", taskID)
         taskscore = cursor.execute(taskscorei)
         
@@ -150,7 +184,7 @@ def getalltasks():
      taskID = str(taskdig1 + taskdig2)
      taskname = str(["select TaskName from Task where TaskID like", TaskID])
      taskduration = str(["select TaskDuration from Task where TaskID like", TaskID])
-    taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
+     taskscore = str(["select TaskScore from Task where TaskID like", TaskID])
 
 def instructions():
     #prints instructions to screen
@@ -191,6 +225,49 @@ def waitingroomdump():
 
         print(firstname, lastname, "is a", typename, "waiting for", taskname)
         
+def movein(i):
+    a = i-1
+    movein = waitingroom.pop(a)
+    currenttasks.append(movein)
+    
+def moveout(i):
+    a = i-1
+    moveout = currenttasks.pop(a)
+    waitingroom.append(moveout)
+    
+def pickdotask():
+    a = input("Select task to do")
+    
+    time = dotask(moveout)
+    if time == 0:
+        moveout = currenttasks.pop(a)
+        print("task complete!")
+        checkelapsedtime()
+    else:
+        desktime.append(time)
+
+def resumetask():
+    a = input("select task ")
+    print(deskname[a])
+    print(desktime[a])
+    timer = desktime[a]
+    taskdoing = True
+    while taskdoing == True:
+        timer = timer - 1
+        exit = input()
+        time.sleep(1)
+        exit = input()
+        if timer == 0:
+            print("task complete")
+            taskdoing == False
+            return(timeleft)
+        if exit == "x":
+            timeleft = timer
+            taskdoing == False
+            return(timeleft)
+
+def checkelapsedtime():
+    pass
 
 def setup():
     populatewaitingroom()
@@ -201,29 +278,19 @@ def main():
         setup()
     print("Game begin.")
     waitingroomdump()
+    turn()
+
+
+def turn():
+    pass
 
 #get reference number
 waitingroom = []
 currenttasks = []
+timestartedtime = []
+timestartedrefnum = []
+desktime = []
+deskname = []
 setupdone = 0
 main()
 
-def movein(i):
-    a = i-1
-    movein = waitingroom.pop(a)
-    currentasks.append(movein)
-    
-def moveout(i):
-    a = i-1
-    moveout = currentasks.pop(a)
-    waitingroom.append(moveout)
-    
- 
- #TODO: 
- #generate refnum funtion - top priority 
- #use said lists to generate a second list of start times
- #time spent processing exceeds time needed, pass
- #time spent waiting exceeds wait time for person, fail task related to that person [use the reference numbers!!]
- #check per object per tick, maybe 60tps
- #then create a function to check whether waiting time is over and FAIL or task time is COMPLETE and pass
- 
